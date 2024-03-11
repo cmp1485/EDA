@@ -1,15 +1,22 @@
 from flask import Flask, render_template, request
+import re
+
 
 app = Flask(__name__)
 
-notes = []
 
-@app.route('/', methods=["GET", "POST"])
+@app.route('/', methods=['GET','POST'])
 def index():
-    if request.method == 'POST':
-        note = request.form.get("note")
-        notes.append(note)
-    return render_template("home.html", notes=notes)
+    return render_template('index.html')
 
-if __name__ == '__main__':
+
+@app.route('/results', methods=['POST'])
+def results():
+    test_string = request.form['test_string']
+    regex_pattern = request.form['regex_pattern']
+    matched_strings = re.findall(regex_pattern, test_string)
+    return render_template('index.html', matched_strings=matched_strings)
+
+
+if __name__ == "__main__":
     app.run(debug=True)
